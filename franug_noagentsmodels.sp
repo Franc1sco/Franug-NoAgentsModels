@@ -1,7 +1,6 @@
 #include <sourcemod>
 #include <sdktools>
 #include <cstrike>
-#include <dhooks>
 
 // Valve Agents models list
 char Agents[][] = {
@@ -34,7 +33,7 @@ char tmodel[128] = "models/player/custom_player/legacy/tm_phoenix_varianta.mdl";
 char ctmodel[128] = "models/player/custom_player/legacy/ctm_sas_varianta.mdl";
 
 
-#define DATA "1.0"
+#define DATA "2.0"
 
 public Plugin myinfo = 
 {
@@ -45,55 +44,88 @@ public Plugin myinfo =
 	url = "http://steamcommunity.com/id/franug"
 };
 
-Handle hSetModel;
+ConVar cv_ct, cv_tt, cv_time;
+char g_ctmodel[128], g_ttmodel[128];
+float g_time;
+
+Handle timers[MAXPLAYERS];
 
 public void OnPluginStart()
 {
-	Handle hGameConf;
+	HookEvent("player_spawn", Event_PlayerSpawn);
 	
-	hGameConf = LoadGameConfigFile("sdktools.games");
-	if(hGameConf == INVALID_HANDLE)
-		SetFailState("Gamedata file sdktools.games.txt is missing.");
-	int iOffset = GameConfGetOffset(hGameConf, "SetEntityModel");
-	CloseHandle(hGameConf);
-	if(iOffset == -1)
-		SetFailState("Gamedata is missing the \"SetEntityModel\" offset.");
+	cv_ct = CreateConVar("sm_noagents_ctmodel", "models/player/custom_player/legacy/ctm_sas_varianta.mdl", "Set the default ct models for apply to people that have a agent skin");
+	cv_tt = CreateConVar("sm_noagents_ttmodel", "models/player/custom_player/legacy/tm_phoenix_varianta.mdl", "Set the default tt models for apply to people that have a agent skin");
+	
+	cv_time = CreateConVar("sm_noagents_timer", "1.2", "Timer on spawn for apply filter of no agents");
+	
+	HookConVarChange(cv_ct, CVarChanged);
+	HookConVarChange(cv_tt, CVarChanged);
+	HookConVarChange(cv_time, CVarChanged);
+	
+	GetConVarString(cv_ct, g_ctmodel, 128);
+	GetConVarString(cv_tt, g_ttmodel, 128);
+	g_time = GetConVarFloat(cv_time);
+}
+
+public void CVarChanged(ConVar hConvar, char[] oldV, char[] newV)
+{
+	if(cv_ct == hConvar)
+	{
+		strcopy(g_ctmodel, 128, newV);
+		if(!IsModelPrecached(g_ctmodel))
+			PrecacheModel(g_ctmodel);
+	}
+	else if(cv_tt == hConvar)
+	{
+		strcopy(g_ttmodel, 128, newV);
+		if(!IsModelPrecached(g_ttmodel))
+			PrecacheModel(g_ttmodel);
+	}
+}
+
+public void OnClientDisconnect(int client)
+{
+	if(timers[client] != null)
+		KillTimer(timers[client]);
 		
-	hSetModel = DHookCreate(iOffset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, SetModel);
-	DHookAddParam(hSetModel, HookParamType_CharPtr);
+	timers[client] = null;
 }
 
 public void OnMapStart()
 {
-	PrecacheModel(tmodel);
-	PrecacheModel(ctmodel);
+	PrecacheModel(g_ttmodel);
+	
+	PrecacheModel(g_ctmodel);
 }
 
-public void OnClientPutInServer(int client)
-{
-	if(IsFakeClient(client)) return;
+public Action Event_PlayerSpawn(Handle event, char[] name, bool dontBroadcast)
+{	
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	
-	DHookEntity(hSetModel, true, client);
-}
-
-public MRESReturn SetModel(int client, Handle hParams)
-{
-	// todo block the event instead of keep it and set model after
-	CreateTimer(0.0, ReModel, client);
+	if (IsFakeClient(client))return;
 	
-	return MRES_Ignored;
+	if(timers[client] != null)
+		KillTimer(timers[client]);
+		
+	timers[client] = CreateTimer(g_time, ReModel, client);
 }
 
 public Action ReModel(Handle timer, int client)
 {
+	timers[client] = null;
+	
 	if (!IsClientInGame(client) || !IsPlayerAlive(client))return;
+	
+	char model[128];
+	GetClientModel(client, model, sizeof(model));
+	
+	if(StrContains(model, "models/player/custom_player/legacy/") == -1) // player use a custom model by other plugin
+		return;
 	
 	int team = GetClientTeam(client);
 	
 	if (team < 2)return;
-	
-	char model[128];
-	GetClientModel(client, model, sizeof(model));
 	
 	for (int i = 0; i < sizeof(Agents); i++)
 	{
