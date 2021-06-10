@@ -1,6 +1,6 @@
 /*  SM Franug No Agents Models
  *
- *  Copyright (C) 2020 Francisco 'Franc1sco' García
+ *  Copyright (C) 2020-2021 Francisco 'Franc1sco' García
  * 
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -19,38 +19,87 @@
 #include <sdktools>
 #include <cstrike>
 
-// Valve Agents models list
-char Agents[][] = {
-"models/player/custom_player/legacy/tm_phoenix_varianth.mdl",
-"models/player/custom_player/legacy/tm_phoenix_variantg.mdl",
-"models/player/custom_player/legacy/tm_phoenix_variantf.mdl",
-"models/player/custom_player/legacy/tm_leet_varianti.mdl",
-"models/player/custom_player/legacy/tm_leet_variantg.mdl",
-"models/player/custom_player/legacy/tm_leet_varianth.mdl",
-"models/player/custom_player/legacy/tm_balkan_variantj.mdl",
-"models/player/custom_player/legacy/tm_balkan_varianti.mdl",
-"models/player/custom_player/legacy/tm_balkan_varianth.mdl",
-"models/player/custom_player/legacy/tm_balkan_variantg.mdl",
-"models/player/custom_player/legacy/tm_balkan_variantf.mdl",
-"models/player/custom_player/legacy/ctm_st6_variantm.mdl",
-"models/player/custom_player/legacy/ctm_st6_varianti.mdl",
-"models/player/custom_player/legacy/ctm_st6_variantg.mdl",
-"models/player/custom_player/legacy/ctm_sas_variantf.mdl",
-"models/player/custom_player/legacy/ctm_fbi_varianth.mdl",
-"models/player/custom_player/legacy/ctm_fbi_variantg.mdl",
-"models/player/custom_player/legacy/ctm_fbi_variantb.mdl",
-"models/player/custom_player/legacy/tm_leet_variantf.mdl",
-"models/player/custom_player/legacy/ctm_fbi_variantf.mdl",
-"models/player/custom_player/legacy/ctm_st6_variante.mdl",
-"models/player/custom_player/legacy/ctm_st6_variantk.mdl"
-};
+// Valve Agents list by category and team
+char CTDistinguished[][][] =
+{
+	{"Seal Team 6 Soldier | NSWC SEAL",						"models/player/custom_player/legacy/ctm_st6_variante.mdl"},
+	{"3rd Commando Company | KSK",							"models/player/custom_player/legacy/ctm_st6_variantk.mdl"},
+	{"Operator | FBI SWAT",									"models/player/custom_player/legacy/ctm_fbi_variantf.mdl"},
+	{"B Squadron Officer | SAS",							"models/player/custom_player/legacy/ctm_sas_variantf.mdl"},
+	{"Chem-Haz Specialist | SWAT",							"models/player/custom_player/legacy/ctm_swat_variantj.mdl"},
+	{"Bio-Haz Specialist | SWAT",							"models/player/custom_player/legacy/ctm_swat_varianth.mdl"},
+}
+
+char TDistinguished[][][] =
+{
+	{"Enforcer | Phoenix",									"models/player/custom_player/legacy/tm_phoenix_variantf.mdl"},
+	{"Soldier | Phoenix",									"models/player/custom_player/legacy/tm_phoenix_varianth.mdl"},
+	{"Ground Rebel  | Elite Crew",							"models/player/custom_player/legacy/tm_leet_variantg.mdl"},
+	{"Street Soldier | Phoenix",							"models/player/custom_player/legacy/tm_phoenix_varianti.mdl"},
+	{"Dragomir | Sabre Footsoldier",						"models/player/custom_player/legacy/tm_balkan_variantl.mdl"},
+}
+
+char CTExceptional[][][] =
+{
+	{"Markus Delrow | FBI",									"models/player/custom_player/legacy/ctm_fbi_variantg.mdl"},
+	{"Buckshot | NSWC SEAL",								"models/player/custom_player/legacy/ctm_st6_variantg.mdl"},
+	{"John 'Van Healen' Kask | SWAT",						"models/player/custom_player/legacy/ctm_swat_variantg.mdl"},
+	{"Sergeant Bombson | SWAT",								"models/player/custom_player/legacy/ctm_swat_varianti.mdl"},
+	{"'Blueberries' Buckshot | NSWC SEAL",					"models/player/custom_player/legacy/ctm_st6_variantj.mdl"},
+}
+
+char TExceptional[][][] =
+{
+	{"Maximus | Sabre",										"models/player/custom_player/legacy/tm_balkan_varianti.mdl"},
+	{"Osiris | Elite Crew",									"models/player/custom_player/legacy/tm_leet_varianth.mdl"},
+	{"Slingshot | Phoenix",									"models/player/custom_player/legacy/tm_phoenix_variantg.mdl"},
+	{"Dragomir | Sabre",									"models/player/custom_player/legacy/tm_balkan_variantf.mdl"},
+	{"Getaway Sally | The Professionals",					"models/player/custom_player/legacy/tm_professional_varj.mdl"},
+	{"Little Kev | The Professionals",						"models/player/custom_player/legacy/tm_professional_varh.mdl"},
+}
+
+char CTSuperior[][][] =
+{
+	{"Michael Syfers | FBI Sniper",							"models/player/custom_player/legacy/ctm_fbi_varianth.mdl"},
+	{"'Two Times' McCoy | USAF TACP",						"models/player/custom_player/legacy/ctm_st6_variantm.mdl"},
+	{"1st Lieutenant Farlow | SWAT",						"models/player/custom_player/legacy/ctm_swat_variantf.mdl"},
+	{"'Two Times' McCoy | TACP Cavalry",					"models/player/custom_player/legacy/ctm_st6_variantl.mdl"},
+}
+
+char TSuperior[][][] =
+{
+	{"Blackwolf | Sabre",									"models/player/custom_player/legacy/tm_balkan_variantj.mdl"},
+	{"Prof. Shahmat | Elite Crew",							"models/player/custom_player/legacy/tm_leet_varianti.mdl"},
+	{"Rezan The Ready | Sabre",								"models/player/custom_player/legacy/tm_balkan_variantg.mdl"},
+	{"Number K | The Professionals",						"models/player/custom_player/legacy/tm_professional_vari.mdl"},
+	{"Safecracker Voltzmann | The Professionals",			"models/player/custom_player/legacy/tm_professional_varg.mdl"},
+	{"Rezan the Redshirt | Sabre",							"models/player/custom_player/legacy/tm_balkan_variantk.mdl"},
+}
+
+char CTMaster[][][] =
+{
+	{"Lt. Commander Ricksaw | NSWC SEAL",					"models/player/custom_player/legacy/ctm_st6_varianti.mdl"},
+	{"Special Agent Ava | FBI",								"models/player/custom_player/legacy/ctm_fbi_variantb.mdl"},
+	{"Cmdr. Mae 'Dead Cold' Jamison | SWAT",				"models/player/custom_player/legacy/ctm_swat_variante.mdl"},
+}
+
+char TMaster[][][] =
+{
+	{"'The Doctor' Romanov | Sabre",						"models/player/custom_player/legacy/tm_balkan_varianth.mdl"},
+	{"The Elite Mr. Muhlik | Elite Crew",					"models/player/custom_player/legacy/tm_leet_variantf.mdl"},
+	{"Sir Bloody Miami Darryl | The Professionals",			"models/player/custom_player/legacy/tm_professional_varf.mdl"},
+	{"Sir Bloody Silent Darryl | The Professionals",		"models/player/custom_player/legacy/tm_professional_varf1.mdl"},
+	{"Sir Bloody Skullhead Darryl | The Professionals",		"models/player/custom_player/legacy/tm_professional_varf2.mdl"},
+	{"Sir Bloody Darryl Royale | The Professionals",		"models/player/custom_player/legacy/tm_professional_varf3.mdl"},
+	{"Sir Bloody Loudmouth Darryl | The Professionals",		"models/player/custom_player/legacy/tm_professional_varf4.mdl"},
+}
 
 // default models for replace
 char tmodel[128] = "models/player/custom_player/legacy/tm_phoenix_varianta.mdl";
 char ctmodel[128] = "models/player/custom_player/legacy/ctm_sas_varianta.mdl";
 
 
-#define DATA "2.0"
+#define DATA "3.0"
 
 public Plugin myinfo = 
 {
@@ -144,14 +193,54 @@ public Action ReModel(Handle timer, int client)
 	
 	if (team < 2)return;
 	
-	for (int i = 0; i < sizeof(Agents); i++)
+	if (team == CS_TEAM_CT && isAgentModelCT(model))SetEntityModel(client, ctmodel);
+	else if (team == CS_TEAM_T && isAgentModelT(model)) SetEntityModel(client, tmodel);
+	
+}
+
+bool isAgentModelCT(char model[128])
+{
+	for (int i = 0; i < sizeof(CTDistinguished); i++)
 	{
-		if(StrEqual(model, Agents[i]))
-		{
-			if (team == CS_TEAM_CT)SetEntityModel(client, ctmodel);
-			else SetEntityModel(client, tmodel);
-			
-			break;
-		}			
+		if (StrEqual(CTDistinguished[i][1], model))return true;
 	}
+	
+	for (int i = 0; i < sizeof(CTExceptional); i++)
+	{
+		if (StrEqual(CTExceptional[i][1], model))return true;
+	}
+	
+	for (int i = 0; i < sizeof(CTSuperior); i++)
+	{
+		if (StrEqual(CTSuperior[i][1], model))return true;
+	}
+	
+	for (int i = 0; i < sizeof(CTMaster); i++)
+	{
+		if (StrEqual(CTMaster[i][1], model))return true;
+	}
+	
+	return false;
+}
+
+bool isAgentModelT(char model[128])
+{
+	for (int i = 0; i < sizeof(TDistinguished); i++)
+	{
+		if (StrEqual(TDistinguished[i][1], model))return true;
+	}
+	for (int i = 0; i < sizeof(TExceptional); i++)
+	{
+		if (StrEqual(TExceptional[i][1], model))return true;
+	}
+	for (int i = 0; i < sizeof(TSuperior); i++)
+	{
+		if (StrEqual(TSuperior[i][1], model))return true;
+	}
+	for (int i = 0; i < sizeof(TMaster); i++)
+	{
+		if (StrEqual(TMaster[i][1], model))return true;
+	}
+	
+	return false;
 }
